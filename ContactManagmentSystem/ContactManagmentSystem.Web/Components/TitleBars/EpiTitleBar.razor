@@ -1,0 +1,16 @@
+﻿<div class="d-flex justify-space-between mb-4">
+    <MudText Typo="Typo.h5">@Title</MudText>
+    @if (!string.IsNullOrEmpty(ButtonIcon))
+    {
+        <MudFab Color="ButtonColor" Icon="@ButtonIcon" Size="Size.Medium" IconSize="Size.Small" OnClick="HandleButtonClick" />
+    }
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; }
+    [Parameter] public Color ButtonColor { get; set; }
+    [Parameter] public string ButtonIcon { get; set; }
+    [Parameter] public Action OnButtonClick { get; set; }
+
+    private void HandleButtonClick() => OnButtonClick();
+}

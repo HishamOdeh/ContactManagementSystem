@@ -1,0 +1,76 @@
+﻿@using ContactManagementSystem.Shared;
+@using ContactManagementSystem.Web.Helpers;
+@using ContactManagementSystem.Shared.Features.Contacts;
+
+@if (_contact != null)
+{
+<EditForm Model="@_contact" OnValidSubmit="HandleSubmitAsync">
+    <FluentValidationValidator />
+    <ServerSideValidator @ref="_serverSideValidator" />
+    <MudText Typo="Typo.h6">@_transactionMode</MudText>
+
+    <EpiFormLayout>
+        <EpiFormBody>
+            <MudTextField @bind-Value="_contact.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"
+                          For="@(()=> _contact.LastName)"></MudTextField>
+                <MudTextField @bind-Value="_contact.FirstName" Label="First Name" Variant="Variant.Text" Margin="Margin.Normal"
+                              For="@(()=> _contact.FirstName)"></MudTextField>
+                <MudTextField @bind-Value="_contact.PhoneNumber" Label="Phone Number" Variant="Variant.Text" Margin="Margin.Normal"
+                              For="@(()=> _contact.PhoneNumber)"></MudTextField>
+                <MudTextField @bind-Value="_contact.Email" Label="Email" Variant="Variant.Text" Margin="Margin.Normal"
+                              For="@(()=> _contact.Email)"></MudTextField>
+                <MudDatePicker @bind-Date="_contact.BirthDate" Label="Birth Date" Margin="Margin.Normal" />
+
+        </EpiFormBody>
+        <EpiFormActions>
+            @if (_isEditing)
+            {
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
+            }
+
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Cancel" Class="ml-4" Disabled="IsProcessing">Cancel</MudButton>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-2" Disabled="IsProcessing">Save</MudButton>
+        </EpiFormActions>
+    </EpiFormLayout>
+</EditForm>
+}
+
+@code {
+
+    private ServerSideValidator _serverSideValidator;
+    private bool _isEditing = false;
+    private string _transactionMode = "Adding a Contact";
+    private ContactFormModel _contact = new ContactFormModel();
+
+    [Parameter] public ContactFormModel Contact { get; set; }
+    [Parameter] public bool IsProcessing { get; set; } = false;
+    [Parameter] public CommandResponse CommandResponse { get; set; }
+    [Parameter] public Action OnCancel { get; set; }
+    [Parameter] public Func<Guid, Task> OnDelete { get; set; }
+    [Parameter] public Func<ContactFormModel, Task> OnSubmit { get; set; }
+
+    private async Task HandleSubmitAsync() => await OnSubmit(_contact);
+    private void Cancel() => OnCancel();
+    private void Delete() => OnDelete(_contact.Id);
+
+    protected override void OnParametersSet()
+    {
+        if (Contact != null)
+        {
+            _contact.Id = Contact.Id;
+            _contact.FirstName = Contact.FirstName;
+            _contact.LastName = Contact.LastName;
+            _contact.Email = Contact.Email;
+            _contact.PhoneNumber = Contact.PhoneNumber;
+            _contact.BirthDate = Contact.BirthDate;
+
+            _isEditing = true;
+            _transactionMode = "Editing a Contact";
+        }
+
+        if (CommandResponse != null && !CommandResponse.IsSuccessful)
+        {
+            _serverSideValidator.DisplayErrors(CommandResponse.Errors);
+        }
+    }
+}

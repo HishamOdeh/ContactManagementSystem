@@ -1,0 +1,44 @@
+﻿@page "/addcontact"
+@using MediatR
+@inject IMediator _mediator
+@inject NavigationManager _navigationManager
+@using ContactManagementSystem.Shared
+@using ContactManagementSystem.Shared.Features.Contacts
+
+@if (_isProcessing)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+<MudPaper Elevation="25" Class="pa-4">
+    <ContactForm OnSubmit="Submit" OnCancel="NavigateToList" CommandResponse="_commandResponse" IsProcessing="_isProcessing"></ContactForm>
+</MudPaper>
+
+@code {
+
+    private bool _isProcessing = false;
+    private CommandResponse _commandResponse;
+
+    private async Task Submit(ContactFormModel contact)
+    {
+        _isProcessing = true;
+        StateHasChanged();
+
+        _commandResponse = await _mediator.Send(new AddContactRequest(contact));
+
+        _isProcessing = false;
+
+        if (_commandResponse.IsSuccessful)
+        {
+            NavigateToList();
+        }
+        else
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void NavigateToList()
+    {
+        _navigationManager.NavigateTo("/listcontact");
+    }
+}

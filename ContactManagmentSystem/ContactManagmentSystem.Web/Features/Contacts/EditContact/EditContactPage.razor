@@ -1,0 +1,82 @@
+﻿@page "/editcontact/{contactid:guid}"
+@using MediatR
+@using ContactManagementSystem.Web.Helpers
+@using ContactManagementSystem.Shared
+@using ContactManagementSystem.Shared.Features.Contacts
+@inject IMediator _mediator
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+
+@if (_isProcessing)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+
+@if (_isLoading)
+{
+    <MudPaper Elevation="25">
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+        <MudText Color="Color.Info" Typo="Typo.body1"> Loading contact... </MudText>
+    </MudPaper>
+}
+else
+{
+     <MudPaper Elevation="25" Class="pa-4">
+        <ContactForm Contact="_contact" OnSubmit="Submit" OnCancel="NavigateToList" OnDelete="DeleteAsync"
+                    CommandResponse="_commandResponse" IsProcessing="_isProcessing">
+        </ContactForm>
+    </MudPaper>
+}
+
+@code {
+    private bool _isLoading;
+    private bool _isProcessing = false;
+    private ContactFormModel _contact = new ContactFormModel();
+    private CommandResponse _commandResponse;
+
+    [Parameter] public Guid ContactId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        _contact = (await _mediator.Send(new GetContactRequest(ContactId))).Contact;
+        _isLoading = false;
+    }
+
+    private async Task Submit(ContactFormModel contact)
+    {
+        _isProcessing = true;
+        StateHasChanged();
+
+        _commandResponse = await _mediator.Send(new EditContactRequest(contact));
+
+        _isProcessing = false;
+
+        if (_commandResponse.IsSuccessful)
+        {
+            NavigateToList();
+        }
+        else
+        {
+            StateHasChanged();
+        }
+    }
+
+    private async Task DeleteAsync(Guid contactId)
+    {
+        if ((await _dialogService.ShowMessageBox("Delete", "Are you sure?", yesText: "Delete", cancelText: "Cancel")).Value)
+        {
+             _isProcessing = true;
+          //  await _mediator.Send(new DeleteContactRequest(_contact.Id));
+             _isProcessing = false;
+           
+             NavigateToList();
+
+        }
+    }
+
+    private void NavigateToList()
+    {
+        _navigationManager.NavigateTo("/listcontact");
+    }
+}

@@ -1,0 +1,39 @@
+﻿<MudItem xs="_xs" sm="_sm" md="_md" lg="_lg" xl="_xl" Class=@Class>
+    @ChildContent
+</MudItem>
+
+@code {
+    private int _xs = 12;
+    private int _sm = 12;
+    private int _md = 12;
+    private int _lg;
+    private int _xl;
+
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string Class { get; set; }
+    [Parameter] public EpiItemSize Size { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (Size == EpiItemSize.Small)
+        {
+            _lg = 3;
+            _xl = 3;
+        }
+        else if (Size == EpiItemSize.Medium)
+        {
+            _lg = 4;
+            _xl = 4;
+        }
+        else if (Size == EpiItemSize.Half)
+        {
+            _lg = 6;
+            _xl = 6;
+        }
+        else
+        {
+            _lg = 12;
+            _xl = 12;
+        }
+    }
+}

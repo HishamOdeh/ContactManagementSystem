@@ -1,0 +1,43 @@
+﻿<MudText Class="mb-4" Typo="Typo.h5">@TransactionMode</MudText>
+
+<div class="mb-4">
+    <MudForm @bind-IsValid="_isValid">
+        @ChildContent
+    </MudForm>
+</div>
+
+<div class="d-flex justify-end py-2 px-1 mb-12">
+    @if (OnDelete != null)
+    {
+        <MudTooltip Text="@DeleteToolTipText">
+            <MudButton OnClick="Delete" Variant="Variant.Filled" Color="Color.Error" StartIcon="@Icons.Material.Filled.Delete" Disabled="IsProcessing || !string.IsNullOrEmpty(DeleteToolTipText)">Delete</MudButton>
+        </MudTooltip>
+    }
+
+    <MudButton OnClick="Cancel" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.ArrowBack" Class="ml-2" Disabled="IsProcessing">Cancel</MudButton>
+    <MudButton OnClick="Save" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Save" Class="ml-2" Disabled="IsProcessing || !_isValid">Save</MudButton>
+</div>
+
+@code {
+    private bool _isValid;
+
+    [Parameter] public string DeleteToolTipText { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public bool IsProcessing { get; set; }
+    [Parameter] public Action OnCancel { get; set; }
+    [Parameter] public Func<Task> OnDelete { get; set; }
+    [Parameter] public Func<Task> OnSave { get; set; }
+    [Parameter] public string TransactionMode { get; set; }
+
+    private void Cancel() => OnCancel();
+
+    private async Task Delete()
+    {
+        await OnDelete();
+    }
+
+    private async Task Save()
+    {
+        await OnSave();
+    }
+}

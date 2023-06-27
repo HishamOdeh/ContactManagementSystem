@@ -1,0 +1,25 @@
+﻿<MudMessageBox Title="@Title" Class="pa-2">
+    <MessageContent>
+        @Message
+    </MessageContent>
+    <YesButton>
+        <MudButton Variant="Variant.Filled" Color="ButtonColor" StartIcon="@ButtonIcon" Class="mb-2 mr-2">@ButtonText</MudButton>
+    </YesButton>
+</MudMessageBox>
+
+@code {
+    [Parameter] public Color ButtonColor { get; set; } = Color.Primary;
+    [Parameter] public string ButtonIcon { get; set; }
+    [Parameter] public string ButtonText { get; set; }
+    [Parameter] public string Message { get; set; }
+    [Parameter] public string Title { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        if (ButtonText == "Delete")
+        {
+            ButtonColor = Color.Error;
+            ButtonIcon = Icons.Material.Filled.Delete;
+        }
+    }
+}

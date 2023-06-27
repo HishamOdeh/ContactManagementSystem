@@ -1,0 +1,11 @@
+﻿<MudCard Class="mb-5 pa-2">
+    <MudCardActions Class="flex-column flex-wrap justify-start">
+        <MudGrid Class="px-1" Spacing="1">
+            @ChildContent
+        </MudGrid>
+    </MudCardActions>
+</MudCard>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+}

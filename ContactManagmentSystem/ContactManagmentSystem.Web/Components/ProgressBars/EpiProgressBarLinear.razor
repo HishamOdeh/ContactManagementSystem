@@ -1,0 +1,11 @@
+﻿@if (IsProcessing)
+{
+    <MudProgressLinear Color="Color" Indeterminate="Indeterminate" Class="@Class" />
+}
+
+@code {
+    [Parameter] public string Class { get; set; } = "my-7";
+    [Parameter] public Color Color { get; set; } = Color.Primary;
+    [Parameter] public bool Indeterminate { get; set; } = true;
+    [Parameter] public bool IsProcessing { get; set; } = true;
+}

@@ -1,0 +1,56 @@
+﻿@page "/listContact"
+@using ContactManagementSystem.Shared.Features.Contacts
+
+@using MediatR
+@inject IMediator _mediator
+@inject NavigationManager _navigationManager
+
+<MudPaper Elevation="10" Class="pa-4">
+    <div class="d-flex justify-space-between">
+        <MudText Typo="Typo.h6" GutterBottom="true">Contacts</MudText>
+        <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.Add" OnClick="AddContact" />
+    </div>
+
+    <MudText Class="mb-8">List of Contacts</MudText>
+
+    @if (_Contacts == null)
+    {
+        <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+    }
+    else
+    {
+        <MudTable Items="@_Contacts" Hover="true" SortLabel="Sort By" Dense="true">
+            <HeaderContent>
+                <MudTh>Last Name</MudTh>
+                <MudTh>First Name</MudTh>
+                <MudTh>Phone Number</MudTh>
+                <MudTh>Email </MudTh>
+                <MudTh>Birthday</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="Last Name">
+                    <MudLink Typo="Typo.body2" Href="@($"/editContact/{context.Id}")"> @context.LastName</MudLink>
+                </MudTd>
+                <MudTd DataLabel="First Name">@context.FirstName</MudTd>
+                <MudTd DataLabel="Phone Number">@context.PhoneNumber</MudTd>
+                <MudTd DataLabel="Email">@context.Email</MudTd>
+                <MudTd DataLabel="BirthDate">@context.BirthDate</MudTd>
+
+            </RowTemplate>
+        </MudTable>
+    }
+</MudPaper>
+
+@code {
+    private IEnumerable<ListContactDto> _Contacts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _Contacts = (await _mediator.Send(new ListContactRequest())).Contacts;
+    }
+
+    private void AddContact()
+    {
+        _navigationManager.NavigateTo("/addContact");
+    }
+}
