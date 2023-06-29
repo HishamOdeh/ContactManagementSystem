@@ -26,8 +26,8 @@ else
                 </MudCardHeader>
                 <MudCardContent>
                     <MudText>@_contact.PhoneNumber</MudText>
-                    <MudText>@_contact.BirthDate.ToLongDateString()</MudText>
-                    <MudText>@_contact.Email</MudText>
+                    <MudText>@(_contact.BirthDate == default(DateTime) ? "Birth date not provided" : _contact.BirthDate.ToLongDateString())</MudText>
+                        <MudText>@_contact.Email</MudText>
                 </MudCardContent>
             </MudCard>
         </EpiViewMain>

@@ -39,7 +39,14 @@ namespace ContactManagementSystem.Api.Features.Contacts
                     Contact.LastName = request.Contact.LastName;
                     Contact.Email = request.Contact.Email;
                     Contact.PhoneNumber = request.Contact.PhoneNumber;
-                    Contact.BirthDate = request.Contact.BirthDate.Value;
+                    if (request.Contact.BirthDate.HasValue)
+                    {
+                        Contact.BirthDate = request.Contact.BirthDate.Value;
+                    }
+                    else
+                    {
+                        Contact.BirthDate = null;
+                    }
                     Contact.ModifiedDate = DateTime.Now;
 
                     await _context.SaveChangesAsync(cancellationToken);

@@ -1,6 +1,8 @@
+using ContactManagementSystem.Api.Features.Contacts;
 using ContactManagementSystem.Api.Services;
 using ContactManagementSystem.Domain;
 using ContactManagementSystem.Domain.Interfaces;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
@@ -32,7 +34,13 @@ RepoDb.SqlServerBootstrap.Initialize();
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages().AddFluentValidation(fv =>
+{
+    fv.ImplicitlyValidateChildProperties = true;
+    fv.RegisterValidatorsFromAssemblyContaining<ContactsServerValidator>();
+    fv.RegisterValidatorsFromAssemblyContaining<Program>();
+
+});
 
 builder.Services.AddSwaggerGen(c =>
 {

@@ -39,6 +39,7 @@
     </MudCard>
 
 </EditForm>
+
 }
 
 @code {
@@ -78,34 +79,6 @@
         {
             _serverSideValidator.DisplayErrors(CommandResponse.Errors);
         }
-        /*<EditForm Model="@_contact" OnValidSubmit="HandleSubmitAsync">
-    <FluentValidationValidator />
-    <ServerSideValidator @ref="_serverSideValidator" />
-    <MudText Typo="Typo.h6">@_transactionMode</MudText>
-
-    <EpiFormLayout>
-        <EpiFormBody>
-            <MudTextField @bind-Value="_contact.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"
-                          For="@(()=> _contact.LastName)"></MudTextField>
-                <MudTextField @bind-Value="_contact.FirstName" Label="First Name" Variant="Variant.Text" Margin="Margin.Normal"
-                              For="@(()=> _contact.FirstName)"></MudTextField>
-                <MudTextField @bind-Value="_contact.PhoneNumber" Label="Phone Number" Variant="Variant.Text" Margin="Margin.Normal"
-                              For="@(()=> _contact.PhoneNumber)"></MudTextField>
-                <MudTextField @bind-Value="_contact.Email" Label="Email" Variant="Variant.Text" Margin="Margin.Normal"
-                              For="@(()=> _contact.Email)"></MudTextField>
-                <MudDatePicker @bind-Date="_contact.BirthDate" Label="Birth Date" Margin="Margin.Normal" />
-
-        </EpiFormBody>
-        <EpiFormActions>
-            @if (_isEditing)
-            {
-                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="Delete">Delete</MudButton>
-            }
-
-            <MudButton Variant="Variant.Filled" Color="Color.Secondary" OnClick="Cancel" Class="ml-4" Disabled="IsProcessing">Cancel</MudButton>
-            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" Class="ml-2" Disabled="IsProcessing">Save</MudButton>
-        </EpiFormActions>
-    </EpiFormLayout>
-    </EditForm>*/
+       
     }
 }

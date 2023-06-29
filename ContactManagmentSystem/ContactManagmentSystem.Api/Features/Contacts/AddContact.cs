@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ContactManagementSystem.Domain.Models;
+using MudBlazor;
+
 namespace ContactManagementSystem.Api.Features.Contacts
 {
     public class AddContact : BaseAsyncEndpoint
@@ -30,29 +32,36 @@ namespace ContactManagementSystem.Api.Features.Contacts
                Tags = new[] { "ContactEndpoint" })]
         public override async Task<ActionResult<CommandResponse>> HandleAsync(AddContactRequest request, CancellationToken cancellationToken = default)
         {
-            if (ModelState.IsValid)
-            {
-                var Contact = new Contact()
+            try{
+                if (ModelState.IsValid)
                 {
-                    FirstName = request.Contact.FirstName,
-                    LastName = request.Contact.LastName,
-                    PhoneNumber = request.Contact.PhoneNumber,
-                    Email = request.Contact.Email,
-                    BirthDate = (DateTime)request.Contact.BirthDate,
-                    CreatedDate = DateTime.Now
-                };
+                    var Contact = new Contact()
+                    {
+                        FirstName = request.Contact.FirstName,
+                        LastName = request.Contact.LastName,
+                        PhoneNumber = request.Contact.PhoneNumber,
+                        Email = request.Contact.Email,
+                        BirthDate = request.Contact.BirthDate,
+                        CreatedDate = DateTime.Now
+                    };
 
-                await _context.Contacts.AddAsync(Contact);
-                await _context.SaveChangesAsync(cancellationToken);
+                    await _context.Contacts.AddAsync(Contact);
+                    await _context.SaveChangesAsync(cancellationToken);
 
 
 
-                return Ok(new CommandResponse().Success());
+                    return Ok(new CommandResponse().Success());
+                }
+                else
+                {
+                    return BadRequest(new CommandResponse().Errors(ModelState));
+                }
+            } 
+            catch (Exception ex)
+            { 
+                throw ex;
             }
-            else
-            {
-                return BadRequest(new CommandResponse().Errors(ModelState));
-            }
+           
         }
     }
 }
