@@ -1,0 +1,68 @@
+﻿@page "/viewcontact/{contactid:guid}"
+@using MediatR
+@using ContactManagementSystem.Shared.Features.Contacts
+@inject IMediator _mediator
+@inject NavigationManager _navigationManager
+@inject IDialogService _dialogService
+
+
+<div class="d-flex justify-space-between align-center pa-2">
+    <MudText Typo="Typo.h6" GutterBottom="true">Contact</MudText>
+    <MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowBack" OnClick="NavigateBack" />
+</div>
+@if (_contact == null)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+else
+{
+    <EpiViewLayout>
+        <EpiViewMain>
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>@_contact.FirstName @_contact.LastName</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardContent>
+                    <MudText>@_contact.PhoneNumber</MudText>
+                    <MudText>@_contact.BirthDate.ToLongDateString()</MudText>
+                    <MudText>@_contact.Email</MudText>
+                </MudCardContent>
+            </MudCard>
+        </EpiViewMain>
+        <EpiViewSide>
+            <MudCard>
+                <MudCardHeader>
+                    <CardHeaderContent>
+                        <MudText>Todos</MudText>
+                    </CardHeaderContent>
+                </MudCardHeader>
+                <MudCardActions>
+                    <MudButton StartIcon="@Icons.Material.Filled.Edit" OnClick="Edit">Edit</MudButton>
+                </MudCardActions>
+            </MudCard>
+        </EpiViewSide>
+    </EpiViewLayout>
+}
+
+@code {
+    private ViewContactDto _contact;
+
+    [Parameter] public Guid ContactId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        _contact = (await _mediator.Send(new ViewContactRequest(ContactId))).Contact;
+    }
+
+    private void NavigateBack()
+    {
+        _navigationManager.NavigateTo("/listcontact");
+    }
+
+    private void Edit()
+    {
+        _navigationManager.NavigateTo($"/editcontact/{ContactId}");
+    }
+}
