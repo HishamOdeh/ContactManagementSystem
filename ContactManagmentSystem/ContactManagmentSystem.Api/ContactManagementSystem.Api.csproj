@@ -16,7 +16,8 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.2.3" />
   </ItemGroup>
 
-  <ItemGroup>
+
+	<ItemGroup>
 	  <ProjectReference Include="..\ContactManagmentSystem.Domain\ContactManagementSystem.Domain.csproj" />
 	  <ProjectReference Include="..\ContactManagmentSystem.Shared\ContactManagementSystem.Shared.csproj" />
 	  <ProjectReference Include="..\ContactManagmentSystem.Web\ContactManagementSystem.Web.csproj" />

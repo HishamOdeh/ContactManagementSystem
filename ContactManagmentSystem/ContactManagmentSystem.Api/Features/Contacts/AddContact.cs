@@ -34,12 +34,11 @@ namespace ContactManagementSystem.Api.Features.Contacts
             {
                 var Contact = new Contact()
                 {
-                    Id = request.Contact.Id,
                     FirstName = request.Contact.FirstName,
                     LastName = request.Contact.LastName,
                     PhoneNumber = request.Contact.PhoneNumber,
                     Email = request.Contact.Email,
-                    BirthDate = request.Contact.BirthDate.Value,
+                    BirthDate = (DateTime)request.Contact.BirthDate,
                     CreatedDate = DateTime.Now
                 };
 

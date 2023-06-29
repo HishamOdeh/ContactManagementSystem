@@ -7,18 +7,20 @@ using MediatR;
 
 namespace ContactManagementSystem.Web.Features.Contacts.EditContact
 {
-    public class EditContact : IRequestHandler<EditContactRequest, CommandResponse>
+    public class DeleteContact : IRequestHandler<DeleteContactRequest, CommandResponse>
     {
         private readonly IHttpService _httpService;
 
-        public EditContact(IHttpService httpService)
+        public DeleteContact(IHttpService httpService)
         {
             _httpService = httpService;
         }
 
-        public async Task<CommandResponse> Handle(EditContactRequest request, CancellationToken cancellationToken)
+        public async Task<CommandResponse> Handle(DeleteContactRequest request, CancellationToken cancellationToken)
         {
-            var response =  await _httpService.SendPutAsync<EditContactRequest>(EditContactRequest.RouteTemplate, request);
+            var response =  await _httpService.SendDeleteWithResponseAsync(
+                DeleteContactRequest.RouteTemplate.Replace("{ContactId}",
+                request.ContactId.ToString()));
             return response;
         }
     }

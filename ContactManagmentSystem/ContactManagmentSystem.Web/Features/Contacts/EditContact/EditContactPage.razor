@@ -67,7 +67,7 @@ else
         if ((await _dialogService.ShowMessageBox("Delete", "Are you sure?", yesText: "Delete", cancelText: "Cancel")).Value)
         {
              _isProcessing = true;
-          //  await _mediator.Send(new DeleteContactRequest(_contact.Id));
+             await _mediator.Send(new DeleteContactRequest(_contact.Id));
              _isProcessing = false;
            
              NavigateToList();
