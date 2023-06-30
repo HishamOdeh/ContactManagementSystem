@@ -1,0 +1,33 @@
+﻿@using ContactManagementSystem.Shared.Features.Contacts
+
+<MudPaper Elevation="10" Class="pa-4">
+	<div class="d-flex justify-space-between">
+		<MudText Typo="Typo.h6" GutterBottom="true">Contacts</MudText>
+		<MudFab Color="Color.Primary" Icon="@Icons.Material.Filled.ArrowBack" OnClick="BackToSearch" />
+	</div>
+
+	<MudText Class="mb-8">List of Contacts</MudText>
+
+	<MudTable Items="@Contacts" Hover="true" SortLabel="Sort By" Dense="true">
+		<HeaderContent>
+			<MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ListContactDto, object>(x=>x.LastName)">Last Name</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ListContactDto, object>(x=>x.FirstName)">First Name</MudTableSortLabel></MudTh>
+			<MudTh>Phone Number</MudTh>
+			<MudTh>Email</MudTh>
+			<MudTh>Birth Date</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Last Name">
+				<MudLink Href="@($"/editcontact/{context.Id}")"> @context.LastName</MudLink>
+			</MudTd>
+			<MudTd DataLabel="First Name">@context.FirstName</MudTd>
+			<MudTd DataLabel="Phone Number">@context.PhoneNumber</MudTd>
+			<MudTd DataLabel="Email">@context.Email</MudTd>
+			<MudTd DataLabel="Birth Date">@context.BirthDate.ToShortDateString()</MudTd>
+		</RowTemplate>
+	</MudTable>
+</MudPaper>
+@code {
+	[Parameter] public List<ListContactDto> Contacts { get; set; }
+	[Parameter] public Action BackToSearch { get; set; }
+}

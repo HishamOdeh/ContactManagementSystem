@@ -16,7 +16,6 @@ namespace ContactManagementSystem.Shared.Features.Contacts
         public string Email { get; set; }
         public DateTime? BirthDate { get; set; }
 
-       
     }
     public class ContactValidator : AbstractValidator<ContactFormModel>
     {

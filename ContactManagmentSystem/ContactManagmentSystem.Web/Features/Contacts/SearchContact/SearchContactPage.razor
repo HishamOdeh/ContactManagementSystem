@@ -1,0 +1,95 @@
+﻿@page "/searchcontact"
+@using MediatR
+@using ContactManagementSystem.Shared.Features.Contacts
+@inject IMediator _mediator
+@inject NavigationManager _navigationManager
+@implements IDisposable
+
+@if (_isProcessing)
+{
+    <MudProgressLinear Color="Color.Primary" Indeterminate="true" Class="my-7" />
+}
+@if (_showResults)
+{
+    <SearchContactResult Contacts="_contacts" OnBackToSearch="BackToSearch"></SearchContactResult>
+}
+else
+{
+    <SearchContactForm SearchContact="_searchContact" OnCancel="Cancel" OnSubmit="Submit" IsProcessing="_isProcessing"></SearchContactForm>
+}
+
+@code{
+    private bool _isProcessing = false;
+    private bool _showResults = false;
+
+    private SearchContactRequest _searchContact = new SearchContactRequest();
+    private List<ListContactDto> _contacts { get; set; } = new List<ListContactDto>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (!_searchContact.IsEmpty())
+        {
+            await GetSearchResults();
+            _showResults = true;
+        }
+        _navigationManager.LocationChanged += HandleLocationChanged;
+    }
+
+    private void UpdateSearchModelFromQueryParameters()
+    {
+        var uri = _navigationManager.Uri;
+        _navigationManager.TryGetQueryString<string>("lastname", out var lastName);
+        _navigationManager.TryGetQueryString<string>("firstname", out var firstName);
+
+        _searchContact.LastName = lastName;
+        _searchContact.FirstName = firstName;
+    }
+
+    private async Task Submit(SearchContactRequest searchContact)
+    {
+        _navigationManager.NavigateTo($"/searchcontact/?{searchContact.ToUrl()}");
+    }
+
+    private async void HandleLocationChanged(object sender, LocationChangedEventArgs args)
+    {
+        UpdateSearchModelFromQueryParameters();
+
+        if (!_searchContact.IsEmpty())
+        {
+            await GetSearchResults();
+            _showResults = true;
+        }
+        else
+        {
+            _contacts = new List<ListContactDto>();
+            _showResults = false;
+        }
+        StateHasChanged();
+    }
+
+    private async Task GetSearchResults()
+    {
+        _isProcessing = true;
+        StateHasChanged();
+
+        _contacts = (await _mediator.Send(_searchContact)).Contacts;
+
+        _isProcessing = false;
+        _showResults = true;
+
+        StateHasChanged();
+    }
+    private void Cancel()
+    {
+        _navigationManager.NavigateTo("/");
+    }
+
+    private void BackToSearch()
+    {
+        _showResults = false;
+        _contacts = new List<ListContactDto>();
+        StateHasChanged();
+    }
+   
+    public void Dispose() => _navigationManager.LocationChanged -= HandleLocationChanged;
+}

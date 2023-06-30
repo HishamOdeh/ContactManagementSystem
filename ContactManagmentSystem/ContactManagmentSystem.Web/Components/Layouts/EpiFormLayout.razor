@@ -29,15 +29,15 @@
     [Parameter] public Func<Task> OnSave { get; set; }
     [Parameter] public string TransactionMode { get; set; }
 
-    private void Cancel() => OnCancel();
+    private void Cancel() => OnCancel.Invoke();
 
     private async Task Delete()
     {
-        await OnDelete();
+        await OnDelete.Invoke();
     }
 
     private async Task Save()
     {
-        await OnSave();
+        await OnSave.Invoke();
     }
 }
