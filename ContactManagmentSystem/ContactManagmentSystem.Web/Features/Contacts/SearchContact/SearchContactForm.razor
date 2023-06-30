@@ -1,6 +1,9 @@
 ﻿@using ContactManagementSystem.Shared.Features.Contacts
+@using System.ComponentModel.DataAnnotations
+@using Microsoft.AspNetCore.Components.Forms
 
 <EditForm Model="@SearchContact" OnValidSubmit="HandleSubmitAsync">
+    <DataAnnotationsValidator />
     <MudCard>
         <MudCardHeader>
             <CardHeaderContent>
@@ -12,15 +15,21 @@
         </MudCardHeader>
         <MudCardContent>
             <MudTextField @bind-Value="SearchContact.FirstName" Label="First Name" Variant="Variant.Text" Margin="Margin.Normal"
-                          For="@(()=> SearchContact.FirstName)"></MudTextField>
+                          For="@(()=> SearchContact.FirstName)">
+                <ValidationMessage For="@(()=> SearchContact.FirstName)" />
+            </MudTextField>
             <MudTextField @bind-Value="SearchContact.LastName" Label="Last Name" Variant="Variant.Text" Margin="Margin.Normal"
-                          For="@(()=> SearchContact.LastName)"></MudTextField>
+                          For="@(()=> SearchContact.LastName)">
+                <ValidationMessage For="@(()=> SearchContact.LastName)" />
+            </MudTextField>
         </MudCardContent>
         <MudCardActions Class="d-flex justify-end py-2 px-1">
             <MudButton Variant="Variant.Filled" Color="Color.Default" OnClick="Cancel" class="ml-4">Cancel</MudButton>
-              <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" class="m1-2" Disabled="IsProcessing">Search</MudButton> </MudCardActions>
-        </MudCard>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" Color="Color.Primary" class="m1-2" Disabled="IsProcessing">Search</MudButton>
+        </MudCardActions>
+    </MudCard>
 </EditForm>
+
 @code {
     [Parameter] public bool IsProcessing { get; set; }
 

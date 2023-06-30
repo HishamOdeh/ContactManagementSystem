@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using MediatR;
 
 namespace ContactManagementSystem.Shared.Features.Contacts
@@ -8,8 +9,12 @@ namespace ContactManagementSystem.Shared.Features.Contacts
         public const string RouteTemplate = "/api/contacts/searches";
 
         public record Response(List<ListContactDto> Contacts);
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+		[Required(ErrorMessage = "First Name is required.")]
+
+		public string FirstName { get; set; }
+		[Required(ErrorMessage = "Last Name is required.")]
+
+		public string LastName { get; set; }
 
         public bool IsEmpty()
         {

@@ -11,12 +11,13 @@
 }
 @if (_showResults)
 {
-    <SearchContactResult Contacts="_contacts" OnBackToSearch="BackToSearch"></SearchContactResult>
+    <SearchContactResult Contacts="_contacts" OnBackToSearch="@BackToSearch"></SearchContactResult>
 }
 else
 {
     <SearchContactForm SearchContact="_searchContact" OnCancel="Cancel" OnSubmit="Submit" IsProcessing="_isProcessing"></SearchContactForm>
 }
+
 
 @code{
     private bool _isProcessing = false;

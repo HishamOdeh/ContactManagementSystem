@@ -29,5 +29,6 @@
 </MudPaper>
 @code {
 	[Parameter] public List<ListContactDto> Contacts { get; set; }
-	[Parameter] public Action BackToSearch { get; set; }
+	[Parameter] public Action OnBackToSearch { get; set; }
+	private void BackToSearch() => OnBackToSearch();
 }
